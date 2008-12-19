@@ -1,0 +1,14 @@
+This C++ utility class provides a C++ api for building up hierarchical 
+data that may be passed to or from BrowserPlus services.  The largest
+difficulting in writing native services is the type munging that must occur.
+This utility provides a convenient c++ API for accessing and populating
+data, while representing the data in memory in the structures defined in
+the C BrowserPlus API.
+
+Getting Started:
+
+Build the sample and check out the code.
+
+(looking for a contributed visual studio build file :))
+
+
