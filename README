@@ -1,0 +1,9 @@
+=== Overview
+
+This project contains tools and frameworks to make writing BrowserPlus
+services easier.
+
+=== What's Here Now
+
+DataMapping - a c++ header and source file that makes dealing with type
+              mapping across the BrowserPlus Service API boundary easier.
