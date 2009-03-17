@@ -5,6 +5,11 @@ This utility provides a convenient c++ API for accessing and populating
 data, while representing the data in memory in the structures defined in
 the C BrowserPlus API.
 
+Additionally, this directory contains tools for version parsing, and in
+memory representation of a service description.  These tools will be of
+most interest to authors of interpreter or 'provider' services, such
+as the RubyInterpreter service.  Python anyone?  Javascript?
+
 Getting Started:
 
 Build the sample and check out the code.

@@ -26,7 +26,7 @@
  *              introspectable corelet API types.
  */
 
-#include "bptypeutil.h"
+#include "bptypeutil.hh"
 
 #include <assert.h>
 

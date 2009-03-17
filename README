@@ -5,5 +5,6 @@ services easier.
 
 === What's Here Now
 
-DataMapping - a c++ header and source file that makes dealing with type
-              mapping across the BrowserPlus Service API boundary easier.
+CppTools - c++ headers and source files that makes dealing with type
+           mapping across the BrowserPlus Service API boundary easier,
+		   and facilitate the creation of in memory service descriptions.
