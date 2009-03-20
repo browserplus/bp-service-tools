@@ -89,12 +89,20 @@ public:
     void clear();
 
     bool fromBPArgumentDefinition(const BPArgumentDefinition * bpcd);
+
+    /**
+     * generate a BPArgumentDefinition representation of this function.
+     * This pointer will point to memory managed by this class,
+     * that will not change until toBPCoreletDefinition is called again,
+     * or the instance is deleted.
+     */
+    void toBPArgumentDefinition(BPArgumentDefinition * argDef);
+
 private:
     std::string m_name;    
     std::string m_docString;
     Type m_type;
     bool m_required;
-    
 };
 
 /**
@@ -121,10 +129,21 @@ public:
     void clear();
 
     bool fromBPFunctionDefinition(const BPFunctionDefinition * bpcd);
+
+    /**
+     * populate a pointer to a BPFunctionDefinition with pointers into
+     * internal memory that will not change until
+     * toBPCoreletDefinition is called again, or the instance is
+     * deleted.
+     */
+    void toBPFunctionDefinition(BPFunctionDefinition * func);
+
 private:
     std::string m_name;
     std::string m_docString;    
     std::list<Argument> m_arguments;
+
+    BPArgumentDefinition * m_adefs;
 };
 
 /**
@@ -186,6 +205,14 @@ public:
      */
     bool fromBPCoreletDefinition(const BPCoreletDefinition * bpcd);
 
+    /**
+     * generate a BPCoreletDefinition representation of this service's
+     * interface.  This pointer will point to memory managed by this class,
+     * that will not change until toBPCoreletDefinition is called again,
+     * or the instance is deleted.
+     */
+    const BPCoreletDefinition * toBPCoreletDefinition(void);
+
     /** Does this corelet description describe a built in corelet? */
     bool isBuiltIn() const;
     void setIsBuiltIn(bool isBuiltIn);
@@ -205,6 +232,9 @@ private:
     // true for built in corelets, added using the
     // CoreletRegistry::registerCorelet() call
     bool m_builtIn;
+
+    BPCoreletDefinition * m_def;
+    void freeDef();
 };
 
 /**
