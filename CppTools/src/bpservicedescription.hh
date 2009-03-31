@@ -38,6 +38,7 @@
 
 #include <list>
 #include <map>
+#include <iostream>
 
 // default copy constructors and assignment operators sufficient
 
@@ -112,6 +113,8 @@ class Function
 {
 public:
     Function();
+    Function(const Function & f);
+    Function & operator=(const Function & f);
     ~Function();    
 
     std::string name() const;

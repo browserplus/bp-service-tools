@@ -197,6 +197,25 @@ service::Function::Function()
 {
 }
 
+service::Function::Function(const service::Function & f)
+    : m_name(f.m_name),
+      m_docString(f.m_docString),
+      m_arguments(m_arguments),
+      m_adefs(NULL) // generated on demand, don't copy
+{
+}
+
+service::Function &
+service::Function::operator=(const service::Function & f)
+{
+    m_name = f.m_name;
+    m_docString = f.m_docString;
+    m_arguments = f.m_arguments;
+    if (m_adefs) free(m_adefs);
+    m_adefs = NULL;
+    return *this;
+}
+
 service::Function::~Function()
 {
     if (m_adefs) {

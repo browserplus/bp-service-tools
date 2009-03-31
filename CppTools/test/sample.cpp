@@ -75,8 +75,8 @@ serviceDescSample(void)
     
     {
         bp::service::Function f1;
-        f1.setName("myOnlyFunction");
-        f1.setDocString("This is the only function that I expose, how sad");
+        f1.setName("myFirstFunction");
+        f1.setDocString("This is the first of the two functions that I expose");
         
         // how about an argument or two?
         std::list<bp::service::Argument> arguments;
@@ -97,8 +97,19 @@ serviceDescSample(void)
 
         f1.setArguments(arguments);
         functions.push_back(f1);
+
+        desc.setFunctions(functions);        
+        std::cout << "First BPCoreledDef ptr: " << desc.toBPCoreletDefinition()
+                  << std::endl;
+
+        f1.setName("mySecondFunction");
+        f1.setDocString("This is the second of the two functions that I expose");
+        functions.push_back(f1);        
     }
     desc.setFunctions(functions);
+    std::cout << "Second BPCoreledDef ptr: " << desc.toBPCoreletDefinition()
+              << std::endl;
+
     
     // all built up, now let's print out a human readable description of
     // our services API
