@@ -7,7 +7,7 @@ SRC_PATH ?= .
 INCLUDE = -I${BPSDK_PATH}/include -I${SRC_PATH}/../src
 NAME = CppToolsSample
 CFLAGS ?= -g -Wall
-SRCS = ${SRC_PATH}/sample.cpp ${SRC_PATH}/../src/bptypeutil.cpp ${SRC_PATH}/../src/bpserviceversion.cpp ${SRC_PATH}/../src/bpservicedescription.cpp
+SRCS = ${SRC_PATH}/sample.cpp ${SRC_PATH}/../src/bptypeutil.cpp ${SRC_PATH}/../src/bpserviceversion.cpp ${SRC_PATH}/../src/bpservicedescription.cpp ${SRC_PATH}/../src/bpurlutil.cpp 
 
 ${NAME}: ${SRCS}
 	g++ ${CFLAGS} -o $@ ${INCLUDE} $^

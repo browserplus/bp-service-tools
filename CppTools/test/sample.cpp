@@ -7,7 +7,10 @@
 #include "bptypeutil.hh"
 #include "bpserviceversion.hh"
 #include "bpservicedescription.hh"
+#include "bpurlutil.hh"
+
 #include <iostream>
+#include <assert.h>
 
 static void
 dataMappingSample(void)
@@ -118,6 +121,52 @@ serviceDescSample(void)
     // bye.
 }
 
+static void
+testPathConversion()
+{
+    static struct {
+        const char * path;
+        const char * url;
+    } testData[] = {
+#ifdef WIN32
+        { "\\\\a\\b\\c.jpg", "file://a/b/c.jpg" },
+        { "\\\\.a\\b.ext",  "file://.a/b.ext" },
+        { "\\\\a:100\\c d\\e f.jpg", "file://a:100/c%20d/e%20f.jpg" },
+        { "c:\\foo.txt",  "file:///c:/foo.txt" },
+        { "\\some\\path", "file:///some/path" },
+        { "\\a\\b\\c.jpg", "file:///a/b/c.jpg" },
+        { "\\.a\\b.ext",  "file:///.a/b.ext" },
+        { "\\a b\\c d\\e f.jpg", "file:///a%20b/c%20d/e%20f.jpg" }
+
+#else
+        { "/some/path", "file:///some/path" },
+        { "/a/b/c.jpg", "file:///a/b/c.jpg" },
+        { "/.a/b.ext",  "file:///.a/b.ext" },
+        { "/a b/c d/e f.jpg", "file:///a%20b/c%20d/e%20f.jpg" }
+#endif
+    };
+
+    std::cout << std::endl << " --- The path/url conversion test ---"
+              << std::endl;
+
+    unsigned int i = 0;
+    unsigned int guten = 0;
+    
+    for (i=0; i<sizeof(testData)/sizeof(testData[0]); i++)
+    {
+        bool urlToPath = bp::urlutil::pathFromURL(testData[i].url).compare(
+            testData[i].path) == 0;
+        bool pathToUrl = bp::urlutil::urlFromPath(testData[i].path).compare(
+            testData[i].url) == 0;
+        
+        std::cout << (i + 1) << " ("<< testData[i].path << ")\t"
+                  << (urlToPath ? "." : "F")
+                  << (pathToUrl ? "." : "F")
+                  << std::endl;
+        if (urlToPath && pathToUrl) guten++;
+    }
+    std::cout << guten << "/" << i << " tests guten" << std::endl;
+}
 
 int
 main(void) 
@@ -125,6 +174,7 @@ main(void)
     dataMappingSample();
     versionParsingSample();
     serviceDescSample();
+    testPathConversion();
     
     return 0;
 }

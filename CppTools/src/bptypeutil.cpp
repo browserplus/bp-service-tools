@@ -27,6 +27,7 @@
  */
 
 #include "bptypeutil.hh"
+#include "bpurlutil.hh"
 
 #include <assert.h>
 
@@ -37,14 +38,6 @@
 #pragma warning(disable:4100)
 #endif
 
-#ifdef WIN32
-#define PATH_SEPARATOR "\\"
-#else 
-#define PATH_SEPARATOR "/"
-#endif
-
-#define FILE_URL_PREFIX "file://"
-
 static std::vector<std::string> 
 split(const std::string& str, 
       const std::string& delim)
@@ -52,7 +45,7 @@ split(const std::string& str,
     std::vector<std::string> vsRet;
     
     unsigned int offset = 0;
-    unsigned int delimIndex = 0;
+    unsigned long int delimIndex = 0;
     delimIndex = str.find(delim, offset);
     while (delimIndex != std::string::npos) {
         vsRet.push_back(str.substr(offset, delimIndex - offset));
@@ -63,63 +56,6 @@ split(const std::string& str,
 
     return vsRet;
 }
-
-static std::string 
-urlEncode(const std::string& s)
-{
-    std::string out;
-    
-    char hex[4];
-
-    static const char noencode[] = "!'()*-._";
-    static const char hexvals[] = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
-        'A', 'B', 'C', 'D', 'E', 'F'
-    };
-    
-    for (unsigned int i = 0; i < s.length(); i++) {
-        if (isalnum(s[i]) || strchr(noencode, s[i]) != NULL) {
-            out.append(&s[i], 1);
-        } else {
-            hex[0] = '%';
-            hex[1] = hexvals[(s[i] >> 4) & 0x0F];
-            hex[2] = hexvals[s[i] & 0xF];
-            hex[3] = 0;
-            out.append(hex, strlen(hex));
-        }
-    }
-    return out;
-}
-
-static std::string 
-urlFromPath(const std::string& s)
-{
-    // is this already a url?
-    if (s.substr(0, strlen(FILE_URL_PREFIX)) == FILE_URL_PREFIX) {
-        return s;
-    }
-    
-    std::string delim(PATH_SEPARATOR);
-    std::vector<std::string> edges = split(s, delim);
-    
-    std::string rval(FILE_URL_PREFIX);
-    for (unsigned int i = 0; i < edges.size(); i++) {
-#ifdef WIN32
-        // leave DOS volumes alone
-        if (i == 0 && edges[i].length() == 2 && edges[i][1] == ':') {
-            rval.append("/");
-            rval.append(edges[i]);
-            continue;
-        }
-#endif
-        if (edges[i].length() > 0) {
-            rval.append("/");
-            rval.append(urlEncode(edges[i]));
-        }
-    }
-    return rval;
-}
-
 
 const char *
 bp::typeAsString(BPType t)
@@ -436,7 +372,7 @@ bp::Path::Path(const char * str)
     : bp::String(str) 
 {
     e.type = BPTPath;
-    this->str = urlFromPath(this->str);
+    this->str = bp::urlutil::urlFromPath(this->str);
     e.value.pathVal = (char *)this->str.c_str();
 }
 
@@ -446,7 +382,7 @@ bp::Path::Path(const char * str, unsigned int len)
     e.type = BPTPath;
     this->str.clear();
     this->str.append(str, len);
-    this->str = urlFromPath(this->str);
+    this->str = bp::urlutil::urlFromPath(this->str);
     e.value.pathVal = (char *)this->str.c_str();
 }
 
@@ -454,7 +390,7 @@ bp::Path::Path(const std::string & str)
     : bp::String(str) 
 {
     e.type = BPTPath;
-    this->str = urlFromPath(this->str);
+    this->str = bp::urlutil::urlFromPath(this->str);
     e.value.pathVal = (char *)this->str.c_str();
 }
 

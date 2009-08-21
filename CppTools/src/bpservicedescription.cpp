@@ -178,6 +178,7 @@ service::Argument::toBPArgumentDefinition(BPArgumentDefinition * argDef)
     argDef->name = (char *) m_name.c_str();
     argDef->docString = (char *) m_docString.c_str();
     switch (m_type) {
+        case None: // collapse None -> Null
         case Null: argDef->type = BPTNull; break;
         case Boolean: argDef->type = BPTBoolean; break;
         case Integer: argDef->type = BPTInteger; break;
