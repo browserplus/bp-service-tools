@@ -201,7 +201,7 @@ service::Function::Function()
 service::Function::Function(const service::Function & f)
     : m_name(f.m_name),
       m_docString(f.m_docString),
-      m_arguments(m_arguments),
+      m_arguments(f.m_arguments),
       m_adefs(NULL) // generated on demand, don't copy
 {
 }
