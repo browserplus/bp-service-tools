@@ -110,7 +110,12 @@ serviceDescSample(void)
         functions.push_back(f1);        
     }
     desc.setFunctions(functions);
-    std::cout << "Second BPCoreledDef ptr: " << desc.toBPCoreletDefinition()
+
+    bp::service::Description dc1(desc);
+    bp::service::Description dc2;
+    dc2 = dc1;
+
+    std::cout << "Second BPCoreledDef ptr: " << dc2.toBPCoreletDefinition()
               << std::endl;
 
     
