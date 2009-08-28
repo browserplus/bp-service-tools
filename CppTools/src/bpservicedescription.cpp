@@ -28,9 +28,12 @@
 #include "bpservicedescription.hh"
 
 #include <list>
-#include <assert.h>
 #include <sstream>
 #include <set>
+
+#include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 
 using namespace bp;
 

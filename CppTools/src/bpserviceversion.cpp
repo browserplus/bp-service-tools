@@ -27,6 +27,10 @@
 
 #include "bpserviceversion.hh"
 
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #ifdef WIN32
 #define snprintf _snprintf_s
 #endif

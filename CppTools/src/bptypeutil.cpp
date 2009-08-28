@@ -29,10 +29,12 @@
 #include "bptypeutil.hh"
 #include "bpurlutil.hh"
 
-#include <assert.h>
-
 #include <iostream>
 #include <sstream>
+
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef WIN32
 #pragma warning(disable:4100)

@@ -29,6 +29,8 @@
 #include <string>
 #include <vector>
 
+#include <string.h>
+
 #define FILE_URL_PREFIX "file://"
 
 #ifdef WIN32
