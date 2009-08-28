@@ -121,7 +121,7 @@ serviceDescSample(void)
     
     // all built up, now let's print out a human readable description of
     // our services API
-    std::cout << desc.toHumanReadableString();
+    std::cout << dc2.toHumanReadableString();
 
     // bye.
 }

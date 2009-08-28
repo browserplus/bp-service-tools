@@ -939,7 +939,6 @@ const BPCoreletDefinition *
 bp::service::Description::toBPCoreletDefinition(void)
 {
     freeDef();
-
     m_def = (BPCoreletDefinition *) calloc(1, sizeof(BPCoreletDefinition));
     assert(m_def != NULL);
 
@@ -966,3 +965,31 @@ bp::service::Description::toBPCoreletDefinition(void)
     return m_def;
 }
 
+service::Description::Description(const service::Description & d)
+    : m_name(d.m_name), 
+      m_majorVersion(d.m_majorVersion),    
+      m_minorVersion(d.m_minorVersion),    
+      m_microVersion(d.m_microVersion),
+      m_docString(d.m_docString), 
+      m_functions(d.m_functions),
+      m_builtIn(d.m_builtIn),
+      m_def(NULL)  // generated on demand, don't copy
+{
+}
+
+service::Description &
+service::Description::operator=(const service::Description & d)
+{
+    m_name = d.m_name;
+    m_majorVersion = d.m_majorVersion;
+    m_minorVersion = d.m_minorVersion;
+    m_microVersion = d.m_microVersion;
+    m_docString= d.m_docString;
+    m_functions = d.m_functions;
+    m_builtIn = d.m_builtIn;
+
+    if (m_def) free(m_def); // m_def is demand generated!
+    m_def = NULL;
+
+    return *this;
+}

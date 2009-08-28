@@ -156,6 +156,8 @@ class Description
 {
 public:
     Description();
+    Description(const Description & f);
+    Description & operator=(const Description & f);
     ~Description();    
 
     std::string name() const;
