@@ -197,7 +197,7 @@ bp::urlutil::pathFromURL(const std::string& url)
 #ifdef WIN32
         // no host, check for drive
         if (firstEdge.length() == 2 && firstEdge[1] == ':') {
-            rval = firstEdge + delim;
+            rval = firstEdge;
         } else {
             rval = delim + firstEdge;
         }
