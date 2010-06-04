@@ -27,7 +27,6 @@
  */
 
 #include "bptypeutil.hh"
-#include "bpurlutil.hh"
 
 #include <iostream>
 #include <sstream>
