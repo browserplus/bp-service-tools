@@ -71,7 +71,7 @@ bp::typeAsString(BPType t)
         case BPTMap: return "map";
         case BPTList: return "list";
         case BPTCallBack: return "callback";
-        case BPTPath: return "path";
+        case BPTNativePath: return "path";
         case BPTAny: return "any";
     }
     return "unknown";
@@ -177,7 +177,7 @@ bp::Object::build(const BPElement * elem)
             case BPTString:
                 obj = new bp::String(elem->value.stringVal);
                 break;
-            case BPTPath:
+            case BPTNativePath:
                 obj = new bp::Path(elem->value.pathVal);
                 break;
             case BPTMap:
@@ -268,6 +268,11 @@ const bp::Object &
 bp::Object::operator[](unsigned int index) const
 {
     throw ConversionException("cannot apply operator[int]");
+}
+
+bp::Object::operator const BPPath() const
+{
+    throw ConversionException("cannot convert to path");
 }
 
 bp::Null::Null()
@@ -370,44 +375,36 @@ bp::String::operator std::string() const
     return std::string(value());
 }
 
-bp::Path::Path(const char * str)
-    : bp::String(str) 
+bp::Path::Path(const BPPath path)
+    : bp::Object(BPTNativePath), m_path(path)
 {
-    e.type = BPTPath;
-    this->str = bp::urlutil::urlFromPath(this->str);
-    e.value.pathVal = (char *)this->str.c_str();
-}
-
-bp::Path::Path(const char * str, unsigned int len)
-    : bp::String(str, len)
-{
-    e.type = BPTPath;
-    this->str.clear();
-    this->str.append(str, len);
-    this->str = bp::urlutil::urlFromPath(this->str);
-    e.value.pathVal = (char *)this->str.c_str();
-}
-
-bp::Path::Path(const std::string & str)
-    : bp::String(str) 
-{
-    e.type = BPTPath;
-    this->str = bp::urlutil::urlFromPath(this->str);
-    e.value.pathVal = (char *)this->str.c_str();
+    e.value.pathVal = (BPPath) m_path.c_str();
 }
 
 bp::Path::Path(const Path & other)
-    : bp::String(other.str)
+    :  bp::Object(BPTNativePath), m_path(other.m_path)
 {
-    e.type = BPTPath;
+    e.type = BPTNativePath;
+    e.value.pathVal = (BPPath) m_path.c_str();
+}
+
+const BPPath
+bp::Path::value() const
+{
+    return e.value.pathVal;
 }
 
 bp::Path &
 bp::Path::operator= (const Path & other)
 {
-    str = other.str;
-    e.value.pathVal = (char *) str.c_str();
+    m_path = other.m_path;
+    e.value.pathVal = (BPPath) m_path.c_str();
     return *this;
+}
+
+bp::Path::operator const BPPath() const 
+{
+	return (const BPPath) m_path.c_str();
 }
 
 bp::Path::~Path()
@@ -417,7 +414,7 @@ bp::Path::~Path()
 bp::Object * 
 bp::Path::clone() const
 {
-    return new Path(this->str);
+    return new Path(*this);
 }
 
 bp::Map::Map() : bp::Object(BPTMap) 

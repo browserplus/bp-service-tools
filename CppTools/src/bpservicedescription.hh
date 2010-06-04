@@ -26,7 +26,7 @@
  *
  * XXX: this c++ representation should be augmented to store information
  *      internally in a format that can be transmitted over the
- *      service API (BPCoreletDefinition).
+ *      service API (BPServiceDefinition).
  */
 
 #ifndef __SERVICEDESCRIPTION_H__
@@ -45,7 +45,7 @@
 namespace bp { namespace service {
 
 /**
- * an in memory representation of an argument to a function on a corelet
+ * an in memory representation of an argument to a function on a service
  */ 
 class Argument
 {
@@ -94,7 +94,7 @@ public:
     /**
      * generate a BPArgumentDefinition representation of this function.
      * This pointer will point to memory managed by this class,
-     * that will not change until toBPCoreletDefinition is called again,
+     * that will not change until toBPServiceDefinition is called again,
      * or the instance is deleted.
      */
     void toBPArgumentDefinition(BPArgumentDefinition * argDef);
@@ -107,7 +107,7 @@ private:
 };
 
 /**
- * an in memory representation of a function supported by a corelet
+ * an in memory representation of a function supported by a service
  */ 
 class Function
 {
@@ -136,7 +136,7 @@ public:
     /**
      * populate a pointer to a BPFunctionDefinition with pointers into
      * internal memory that will not change until
-     * toBPCoreletDefinition is called again, or the instance is
+     * toBPServiceDefinition is called again, or the instance is
      * deleted.
      */
     void toBPFunctionDefinition(BPFunctionDefinition * func);
@@ -150,7 +150,7 @@ private:
 };
 
 /**
- * an in memory description of a corelet's interface
+ * an in memory description of a service's interface
  */ 
 class Description
 {
@@ -169,20 +169,20 @@ public:
 
     bp::ServiceVersion version() const;
 
-    /** get corelet major version */
+    /** get service major version */
     unsigned int majorVersion() const;
 
-    /** set corelet major version */
+    /** set service major version */
     void setMajorVersion(unsigned int majorVersion);    
 
-    /** get corelet minor version */
+    /** get service minor version */
     unsigned int minorVersion() const;
-    /** set corelet minor version */
+    /** set service minor version */
     void setMinorVersion(unsigned int minorVersion);    
 
-    /** get corelet micro version */
+    /** get service micro version */
     unsigned int microVersion() const;
-    /** set corelet micro version */
+    /** set service micro version */
     void setMicroVersion(unsigned int microVersion);    
 
     std::string docString() const;
@@ -196,7 +196,7 @@ public:
     /** get the function description */
     bool getFunction(const char * funcName, Function & oFunc) const;
 
-    /** generate a bp::Object representation of the corelet description.
+    /** generate a bp::Object representation of the service description.
      *  caller assumes ownership of returned value */
     bp::Object* toBPObject() const;
     
@@ -205,20 +205,20 @@ public:
     bool fromBPObject(const bp::Object* bp);
 
     /**
-     * populate the structure from a BPCoreletDefinition memory structure
+     * populate the structure from a BPServiceDefinition memory structure
      * returns false on failure, true on success.
      */
-    bool fromBPCoreletDefinition(const BPCoreletDefinition * bpcd);
+    bool fromBPServiceDefinition(const BPServiceDefinition * bpcd);
 
     /**
-     * generate a BPCoreletDefinition representation of this service's
+     * generate a BPServiceDefinition representation of this service's
      * interface.  This pointer will point to memory managed by this class,
-     * that will not change until toBPCoreletDefinition is called again,
+     * that will not change until toBPServiceDefinition is called again,
      * or the instance is deleted.
      */
-    const BPCoreletDefinition * toBPCoreletDefinition(void);
+    const BPServiceDefinition * toBPServiceDefinition(void);
 
-    /** Does this corelet description describe a built in corelet? */
+    /** Does this service description describe a built in service? */
     bool isBuiltIn() const;
     void setIsBuiltIn(bool isBuiltIn);
 
@@ -234,11 +234,11 @@ private:
     unsigned int m_microVersion;    
     std::string m_docString;
     std::list<Function> m_functions;
-    // true for built in corelets, added using the
-    // CoreletRegistry::registerCorelet() call
+    // true for built in services, added using the
+    // ServiceRegistry::registerService() call
     bool m_builtIn;
 
-    BPCoreletDefinition * m_def;
+    BPServiceDefinition * m_def;
     void freeDef();
 };
 

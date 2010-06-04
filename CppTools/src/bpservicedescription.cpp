@@ -22,7 +22,7 @@
 /**
  * Description
  *
- * A Class which describes the functionality provided by a corelet.
+ * A Class which describes the functionality provided by a service.
  */
 
 #include "bpservicedescription.hh"
@@ -166,7 +166,7 @@ service::Argument::fromBPArgumentDefinition(const BPArgumentDefinition * def)
         case BPTMap: m_type = Map; break;
         case BPTList: m_type = List; break;
         case BPTCallBack: m_type = CallBack; break;
-        case BPTPath: m_type = Path; break;
+        case BPTNativePath: m_type = Path; break;
         case BPTAny: m_type = Any; break;
         default: m_type = None; break;
     }
@@ -190,7 +190,7 @@ service::Argument::toBPArgumentDefinition(BPArgumentDefinition * argDef)
         case Map: argDef->type = BPTMap; break;
         case List: argDef->type = BPTList; break;
         case CallBack: argDef->type = BPTCallBack; break;
-        case Path: argDef->type = BPTPath; break;
+        case Path: argDef->type = BPTNativePath; break;
         case Any: argDef->type = BPTAny; break;
     }
     argDef->required = m_required;
@@ -546,7 +546,7 @@ service::Description::fromBPObject(const Object* bp)
     if (m == NULL) return false;
     
     if (!m->has("name", BPTString)) return false;
-    setName(std::string(*(m->get("name"))).c_str());
+    setName(((bp::String*) m->get("name"))->value());
 
     if (!m->has("version/major", BPTInteger) ||
         !m->has("version/minor", BPTInteger) ||
@@ -563,7 +563,7 @@ service::Description::fromBPObject(const Object* bp)
                                     (m->get("version/micro")))->value());
     
     if (m->has("documentation", BPTString)) {
-        setDocString(std::string(*(m->get("documentation"))).c_str());
+        setDocString(((bp::String*) m->get("documentation"))->value());
     }
     
     if (m->has("functions", BPTList)) {
@@ -577,11 +577,10 @@ service::Description::fromBPObject(const Object* bp)
             if (fm == NULL) continue;
             Function func;
             if (fm->has("name", BPTString)) {
-                func.setName(std::string(*(fm->get("name"))).c_str());
+                func.setName(((bp::String *) fm->get("name"))->value());
             }
             if (fm->has("documentation", BPTString)) {
-                func.setDocString(
-                    std::string(*(fm->get("documentation"))).c_str());
+                func.setDocString(((bp::String *) fm->get("documentation"))->value());
             }
             /* now we gotta do params (sheesh) */
             std::list<Argument> params;
@@ -599,17 +598,16 @@ service::Description::fromBPObject(const Object* bp)
 
                     Argument cap;
                     if (am->has("name", BPTString)) {
-                        cap.setName(std::string(*(am->get("name"))).c_str());
+                        cap.setName(((bp::String *) am->get("name"))->value());
                     }
                     if (am->has("required", BPTBoolean)) {
                         cap.setRequired(*(am->get("required")));
                     }
                     if (am->has("documentation", BPTString)) {
-                        cap.setDocString(
-                            std::string(*(am->get("documentation"))).c_str());
+                        cap.setDocString(((bp::String *) am->get("documentation"))->value());
                     }
                     if (am->has("type", BPTString)) {
-                        std::string typeStr = std::string(*(am->get("type")));
+                        std::string typeStr(((bp::String *) am->get("type"))->value());
                         Argument::Type t =
                             Argument::stringAsType(typeStr.c_str());
                         cap.setType(t);
@@ -646,12 +644,12 @@ service::Description::version() const
 }
 
 bool 
-service::Description::fromBPCoreletDefinition(const BPCoreletDefinition * def)
+service::Description::fromBPServiceDefinition(const BPServiceDefinition * def)
 {
     clear();
     if (!def) return false;
 
-    if (def->coreletName) m_name.append(def->coreletName);
+    if (def->serviceName) m_name.append(def->serviceName);
     m_majorVersion = def->majorVersion;    
     m_minorVersion = def->minorVersion;
     m_microVersion = def->microVersion;
@@ -755,7 +753,7 @@ bp::service::validateArguments(const bp::service::Function & desc,
                             gottype = "string";
                         }
                         break;
-                    case BPTPath:
+                    case BPTNativePath:
                         if (adesc.type() != bp::service::Argument::Path)
                         {
                             gottype = "path";
@@ -870,7 +868,7 @@ bp::service::Description::toHumanReadableString() const
 {
     std::stringstream ss;
     
-    ss << "Describing corelet '"
+    ss << "Describing service '"
        << (name().empty() ? "unknown" : name())
        << "', version: "
        << versionString() << std::endl;
@@ -935,14 +933,14 @@ bp::service::Description::freeDef()
     }
 }
 
-const BPCoreletDefinition *
-bp::service::Description::toBPCoreletDefinition(void)
+const BPServiceDefinition *
+bp::service::Description::toBPServiceDefinition(void)
 {
     freeDef();
-    m_def = (BPCoreletDefinition *) calloc(1, sizeof(BPCoreletDefinition));
+    m_def = (BPServiceDefinition *) calloc(1, sizeof(BPServiceDefinition));
     assert(m_def != NULL);
 
-    m_def->coreletName = (char *) m_name.c_str();
+    m_def->serviceName = (char *) m_name.c_str();
     m_def->majorVersion = m_majorVersion;
     m_def->minorVersion = m_minorVersion;    
     m_def->microVersion = m_microVersion;    

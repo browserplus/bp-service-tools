@@ -184,10 +184,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\bpurlutil.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\sample.cpp"
 				>
 			</File>
@@ -207,10 +203,6 @@
 			</File>
 			<File
 				RelativePath="..\src\bptypeutil.hh"
-				>
-			</File>
-			<File
-				RelativePath="..\src\bpurlutil.hh"
 				>
 			</File>
 		</Filter>

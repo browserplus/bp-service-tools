@@ -104,6 +104,7 @@ namespace bp {
          */
         virtual operator bool() const; // throw(ConversionException)
         virtual operator std::string() const; // throw(ConversionException)
+        virtual operator const BPPath() const; // throw(ConversionException)
         virtual operator long long() const; // throw(ConversionException)
         virtual operator double() const; // throw(ConversionException)
         virtual operator std::map<std::string, const Object *>() const;
@@ -161,18 +162,26 @@ namespace bp {
         std::string str;
     };
     
-    // Path represents a pathname in URI form.
-    class Path : public String
+    // Path represents a pathname in native form -- UTF8 on unix or
+    // UTF16 on win32 
+    class Path : public Object
     {
     public:
-        Path(const char * str);
-        Path(const char * str, unsigned int);
-        Path(const std::string & str);
-        Path(const Path &);
-        Path & operator= (const Path &);
-
+        Path(const BPPath path);
+        Path(const Path & other);
+        Path & operator= (const Path & other);
+        // note: the returned pointer is to internal memory, and is
+        // only valid for the lifetime of the object, or the invocation
+        const BPPath value() const;
         virtual ~Path();
+        operator const BPPath() const;
         virtual Object * clone() const;
+    protected:
+#ifdef WIN32
+        std::wstring m_path;
+#else
+        std::string m_path;
+#endif
     };
 
     class Integer : public Object
